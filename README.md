@@ -17,6 +17,6 @@ $ docker exec -it rabbit-1 bash
   # Check the status of all the pluggins
   $ rabbitmq-plugins list
 
-  #Enable the management_pluggin
+  # Enable the management_pluggin
   $ rabbitmq-plugins enable rabbitmq_management
 ```
