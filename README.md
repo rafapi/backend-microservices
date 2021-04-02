@@ -17,6 +17,6 @@
   "Check the status of all the pluggins"
   # rabbitmq-plugins list
 
-  "Enable the management_pluggin if it's not yet running"
+  "Enable the management_pluggin"
   # rabbitmq-plugins enable rabbitmq_management
 ```
