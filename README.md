@@ -10,7 +10,7 @@
 # docker logs rabbit-1
 ```
 ```bash
-"In case you need to enable the management_pluggin
+"In case you need to enable the management_pluggin"
 "Open a console on the container"
 # docker exec -it rabbit-1 bash
   
