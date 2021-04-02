@@ -2,14 +2,16 @@ version: '3.8'
 services:
   backend:
     build:
-      context: .
+      context: ./management
       dockerfile: Dockerfile
+    command: python management/manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
     volumes:
       - .:/app
     depends_on:
       - db
+      - rabbitmq
 
   db:
     image: mysql:5.7.22
@@ -23,3 +25,19 @@ services:
       - .dbdata:/var/lib/mysql
     ports:
       - 33066:3306
+
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: rabbit-1
+    ports:
+      - 5672:5672
+      - 8080:15672
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq
+      - ./rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbits
+
+networks:
+  rabbits:
+    driver: bridge
