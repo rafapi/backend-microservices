@@ -54,5 +54,4 @@ services:
 
 networks:
   rabbits:
-    external: true
-    name: rabbits
+    driver: bridge
