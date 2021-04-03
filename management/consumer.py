@@ -1,10 +1,8 @@
 import pika
 
-
-params = pika.URLParameters('amqp://rafa:rafa@localhost:5672/')
-
-connection = pika.BlockingConnection(params)
-
+credentials = pika.PlainCredentials('guest', 'guest')
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', port=5672,
+                                                               virtual_host='/', credentials=credentials))
 channel = connection.channel()
 
 channel.queue_declare(queue='admin')
