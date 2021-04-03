@@ -1,8 +1,10 @@
 import pika
 
+
 credentials = pika.PlainCredentials('guest', 'guest')
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', port=5672,
-                                                               virtual_host='/', credentials=credentials))
+params = pika.ConnectionParameters(host='rabbitmq', port=5672,virtual_host='/', credentials=credentials)
+connection = pika.BlockingConnection(params)
+
 channel = connection.channel()
 
 channel.queue_declare(queue='main')
@@ -13,7 +15,7 @@ def callback(ch, method, properties, body):
     print(body)
 
 
-channel.basic_consume(queue='main', on_message_callback=callback)
+channel.basic_consume(queue='main', on_message_callback=callback, auto_ack=True)
 
 
 print('Started Consuming')
