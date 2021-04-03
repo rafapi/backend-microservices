@@ -9,7 +9,7 @@ channel.queue_declare(queue='admin')
 
 
 def callback(ch, method, properties, body):
-    print('Received in admiin')
+    print('Received in admin')
     print(body)
 
 
