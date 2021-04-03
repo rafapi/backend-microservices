@@ -9,8 +9,6 @@ services:
       - .:/app
     depends_on:
       - db
-    networks:
-      - rabbits
 
   queue:
     build:
@@ -20,8 +18,6 @@ services:
     command: python consumer.py
     depends_on:
       - db
-    networks:
-      - rabbits
 
   db:
     image: mysql:5.7.22
@@ -35,10 +31,3 @@ services:
       - .dbdata:/var/lib/mysql
     ports:
       - 33067:3306
-    networks:
-      - rabbits
-
-networks:
-  rabbits:
-    external: true
-    name: rabbits
