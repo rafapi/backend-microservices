@@ -132,4 +132,4 @@ dmypy.json
 .dbdata/
 
 # RabbitMQ
-rabbitmq/*
+management/rabbitmq/*
