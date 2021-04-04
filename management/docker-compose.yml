@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: app_d
-    command: python consumer.py
+    command: python -u consumer.py
     depends_on:
       - rabbitmq
       - db
