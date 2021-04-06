@@ -1,8 +1,14 @@
-from flask import Flask
+import requests
+
+from dataclasses import dataclass
+
+from flask import Flask, jsonify, abort
+from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy import UniqueConstraint
 
+from producer import publish
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db/main'
@@ -11,12 +17,14 @@ CORS()
 db = SQLAlchemy(app)
 
 
+@dataclass
 class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    title = db.Column(db.String(200))
-    image = db.Column(db.String(200))
+    id: int = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    title: str = db.Column(db.String(200))
+    image: str = db.Column(db.String(200))
 
 
+@dataclass
 class ProductUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
@@ -25,9 +33,29 @@ class ProductUser(db.Model):
     UniqueConstraint('user_id', 'product_id', name='user_product_unique')
 
 
-@app.route('/')
+@app.route('/api/products')
 def index():
-    return 'Hello'
+    return jsonify(Product.query.all())
+
+
+@app.route('/api/products/<int:id>/like', methods=['GET', 'POST'])
+def like(id):
+    req = requests.get('http://172.17.0.1:8000/api/user')
+    json = req.json()
+
+    try:
+        product_user = ProductUser(user_id=json['id'], product_id=id)
+        db.session.add(product_user)
+        db.session.commit()
+
+        publish('product_liked', id)
+
+    except HTTPException:
+        abort(400, 'You already liked this product.')
+
+    return jsonify({
+        'message': 'success'
+        })
 
 
 if __name__ == '__main__':
