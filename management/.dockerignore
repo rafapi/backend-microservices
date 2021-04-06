@@ -1,0 +1,8 @@
+# By default, ignore everything
+*
+# Add exception for project directory and other source files
+!admin
+!products
+!*.py
+!*.sh
+!requirements.txt
