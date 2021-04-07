@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: rabbit-1
+    ports:
+      - 5672:5672
+      - 8080:15672
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq
+      - ./rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbits
+
+networks:
+  rabbits:
+    name: rabbits
