@@ -11,24 +11,24 @@ from sqlalchemy import UniqueConstraint
 from producer import publish
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db/main'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db_u/main'
 CORS()
 
-db = SQLAlchemy(app)
+db_u = SQLAlchemy(app)
 
 
 @dataclass
-class Product(db.Model):
-    id: int = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    title: str = db.Column(db.String(200))
-    image: str = db.Column(db.String(200))
+class Product(db_u.Model):
+    id: int = db_u.Column(db_u.Integer, primary_key=True, autoincrement=False)
+    title: str = db_u.Column(db_u.String(200))
+    image: str = db_u.Column(db_u.String(200))
 
 
 @dataclass
-class ProductUser(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    product_id = db.Column(db.Integer)
+class ProductUser(db_u.Model):
+    id = db_u.Column(db_u.Integer, primary_key=True)
+    user_id = db_u.Column(db_u.Integer)
+    product_id = db_u.Column(db_u.Integer)
 
     UniqueConstraint('user_id', 'product_id', name='user_product_unique')
 
@@ -45,8 +45,8 @@ def like(id):
 
     try:
         product_user = ProductUser(user_id=json['id'], product_id=id)
-        db.session.add(product_user)
-        db.session.commit()
+        db_u.session.add(product_user)
+        db_u.session.commit()
 
         publish('product_liked', id)
 
