@@ -4,6 +4,8 @@ import json
 import pika
 import django
 
+from pika.exchange_type import ExchangeType
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "admin.settings")
 django.setup()
 
@@ -16,7 +18,9 @@ connection = pika.BlockingConnection(params)
 
 channel = connection.channel()
 
-channel.queue_declare(queue='admin')
+channel.exchange_declare(exchange='test_exchange', exchange_type=ExchangeType.direct, passive=False, durable=True, auto_delete=False)
+channel.queue_declare(queue='admin', auto_delete=True)
+channel.queue_bind(queue='admin', exchange='test_exchange', routing_key='admin')
 
 
 def callback(ch, method, properties, body):
@@ -27,9 +31,10 @@ def callback(ch, method, properties, body):
     product.likes += 1
     product.save()
     print('Product likes increased.')
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-channel.basic_consume(queue='admin', on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue='admin', on_message_callback=callback)
 
 
 print('Started Consuming')
