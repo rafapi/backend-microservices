@@ -8,7 +8,9 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - db_u
+    networks:
+      - rabbits
 
   queue:
     build:
@@ -17,9 +19,11 @@ services:
     image: app_f
     command: python -u consumer.py
     depends_on:
-      - db
+      - db_u
+    networks:
+      - rabbits
 
-  db:
+  db_u:
     image: mysql:5.7.22
     restart: always
     environment:
@@ -31,3 +35,10 @@ services:
       - .dbdata:/var/lib/mysql
     ports:
       - 33067:3306
+    networks:
+      - rabbits
+
+networks:
+  rabbits:
+    external:
+      name: rabbits
