@@ -2,7 +2,7 @@
 
 echo "Waiting for MySQL..."
 
-while ! nc -z db 3306; do
+while ! nc -z db_u 3306; do
   sleep 0.1
 done
 
