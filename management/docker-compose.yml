@@ -12,7 +12,7 @@ services:
     networks:
       - rabbits
 
-  queue:
+  queue_d:
     build:
       context: .
       dockerfile: Dockerfile
