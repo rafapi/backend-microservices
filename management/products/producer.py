@@ -8,13 +8,24 @@ from pika.exchange_type import ExchangeType
 credentials = pika.PlainCredentials('guest', 'guest')
 params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='/',
                                    credentials=credentials)
-connection = pika.BlockingConnection(params)
 
-channel = connection.channel()
 
-channel.exchange_declare(exchange='main', exchange_type=ExchangeType.direct)
+def get_ch():
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
+
+    return connection, channel
+
+
+conn, ch = get_ch()
 
 
 def publish(method, body):
+    global conn, ch
     properties = pika.BasicProperties(method)
-    channel.basic_publish(exchange='test_exchange', routing_key='main', body=json.dumps(body), properties=properties)
+
+    if not conn or conn.is_closed:
+        conn, ch = get_ch()
+
+    ch.basic_publish(exchange='', routing_key='main',
+                     body=json.dumps(body), properties=properties)
