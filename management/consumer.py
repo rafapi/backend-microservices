@@ -4,7 +4,6 @@ import json
 import pika
 import django
 
-from pika.exchange_type import ExchangeType
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "admin.settings")
 django.setup()
@@ -18,9 +17,7 @@ connection = pika.BlockingConnection(params)
 
 channel = connection.channel()
 
-channel.exchange_declare(exchange='test_exchange', exchange_type=ExchangeType.direct, passive=False, durable=True, auto_delete=False)
-channel.queue_declare(queue='admin', auto_delete=True)
-channel.queue_bind(queue='admin', exchange='test_exchange', routing_key='admin')
+channel.queue_declare(queue='admin')
 
 
 def callback(ch, method, properties, body):

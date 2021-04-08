@@ -2,8 +2,6 @@ import json
 from main import Product, db_u
 import pika
 
-from pika.exchange_type import ExchangeType
-
 
 credentials = pika.PlainCredentials('guest', 'guest')
 params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='/', credentials=credentials)
@@ -11,10 +9,7 @@ connection = pika.BlockingConnection(params)
 
 channel = connection.channel()
 
-channel.exchange_declare(exchange='test_exchange', exchange_type=ExchangeType.direct,
-                         passive=False, durable=True, auto_delete=False)
-channel.queue_declare(queue='main', auto_delete=True)
-channel.queue_bind(queue='main', exchange='test_exchange', routing_key='main')
+channel.queue_declare(queue='main')
 
 
 def callback(ch, method, properties, body):
