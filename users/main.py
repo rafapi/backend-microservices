@@ -12,6 +12,9 @@ from producer import publish
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db_u/main'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['DEBUG'] = True
+
 CORS()
 
 db_u = SQLAlchemy(app)
@@ -56,7 +59,3 @@ def like(id):
     return jsonify({
         'message': 'success'
         })
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
