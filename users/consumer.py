@@ -1,15 +1,7 @@
 import json
-from main import Product, db_u
 import pika
 
-
-credentials = pika.PlainCredentials('guest', 'guest')
-params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='/', credentials=credentials)
-connection = pika.BlockingConnection(params)
-
-channel = connection.channel()
-
-channel.queue_declare(queue='main')
+from main import Product, db_u
 
 
 def callback(ch, method, properties, body):
@@ -37,13 +29,34 @@ def callback(ch, method, properties, body):
         print('Product Deleted')
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
+    print("USER: Acknowledged message! Timeout NOT triggered.")
 
 
-channel.basic_consume(queue='main', on_message_callback=callback)
-
-
-print('Started Consuming')
-
-channel.start_consuming()
-
-channel.close()
+while True:
+    try:
+        print("Connecting...")
+        credentials = pika.PlainCredentials('guest', 'guest')
+        params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='products',
+                                           credentials=credentials, heartbeat=1800)
+        connection = pika.BlockingConnection(params)
+        channel = connection.channel()
+        channel.basic_qos(prefetch_count=1)
+        channel.queue_declare('main', durable=True, auto_delete=False)
+        channel.basic_consume('main', on_message_callback=callback)
+        try:
+            print('Started Consuming')
+            channel.start_consuming()
+        except KeyboardInterrupt:
+            channel.stop_consuming()
+            connection.close()
+            break
+    except pika.exceptions.ConnectionClosedByBroker:
+        continue
+    # Do not recover on channel errors
+    except pika.exceptions.AMQPChannelError as err:
+        print("Caught a channel error: {}, stopping...".format(err))
+        break
+    # Recover on all other connection errors
+    except pika.exceptions.AMQPConnectionError:
+        print("Connection was closed, retrying...")
+        continue
