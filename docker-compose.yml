@@ -6,9 +6,11 @@ services:
     ports:
       - 5672:5672
       - 8080:15672
+    environment:
+      RABBITMQ_DEFAULT_VHOST: products
     volumes:
-      - ./rabbitmq/data/:/var/lib/rabbitmq
-      - ./rabbitmq/log/:/var/log/rabbitmq
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+      - ./rabbitmq/log/:/var/log/rabbitmq/
     networks:
       - rabbits
 
