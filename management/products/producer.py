@@ -2,17 +2,18 @@ import json
 
 import pika
 
-from pika.exchange_type import ExchangeType
+from pika.exceptions import StreamLostError
 
 
 credentials = pika.PlainCredentials('guest', 'guest')
-params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='/',
-                                   credentials=credentials)
+params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='products',
+                                   credentials=credentials, heartbeat=1800)
 
 
 def get_ch():
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
+    channel.queue_declare(queue='main', durable=True, auto_delete=False)
 
     return connection, channel
 
@@ -24,8 +25,8 @@ def publish(method, body):
     global conn, ch
     properties = pika.BasicProperties(method)
 
-    if not conn or conn.is_closed:
+    try:
+        ch.basic_publish(exchange='', routing_key='main',
+                         body=json.dumps(body), properties=properties)
+    except StreamLostError:
         conn, ch = get_ch()
-
-    ch.basic_publish(exchange='', routing_key='main',
-                     body=json.dumps(body), properties=properties)
