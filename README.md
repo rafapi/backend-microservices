@@ -5,15 +5,19 @@
 * User operations: port `8001`
 
 #### Tech stack
-* The `admin` API is based on `django`
-* The `users` API is based on `flask`
-* Message distribution provided by `RabbitMQ`
+* `django` for the `admin` API
+* `flask` for the `users` API
+* `RabbitMQ` for message distribution
+* Each of the previous services run on their respective `docker` container
 
+### Setup
+* Each service is initiated from a dedicated `docker-compose` file
 
-#### RabbitMQ
+### Notes
+#### Run RabbitMQ base image and enable plugins on demand
 ```bash
 # Pull and run the instance - note that we are mapping the management port (8080) so that the web interface is available right away
-$ docker run -d --rm --net rabbits -p 8080:15672 --hostname rabbit-1 --name rabbit-1 rabbitmq:3.8-management
+$ docker run -d --rm --net rabbits -p 8080:15672 -p 5672:5672 --hostname rabbit-1 --name rabbit-1 rabbitmq:3.8
 ```  
 ```bash
 # Check the logs to verify everithing is running correctly
