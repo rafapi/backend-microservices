@@ -1,4 +1,8 @@
-# Microservices
+# Microservices backend
+```
+It provides two microservices accessible via two independent REST APIs.
+One for user access and another one for admin access.
+```
 
 ### RabbitMQ
 ```bash
