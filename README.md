@@ -1,7 +1,8 @@
 # Microservices backend
 ```
 It provides two microservices accessible via two independent REST APIs.
-One for user access and another one for admin access.
+Admin operations: port `8000`
+User operations: port `8001`
 ```
 
 ### RabbitMQ
