@@ -8,7 +8,7 @@
 * `django` for the `admin` API
 * `flask` for the `users` API
 * `RabbitMQ` for message distribution
-* Each of the previous services run on their respective `docker` container
+* Each of the previous services runs on a `docker` container
 
 ### Setup
 * Each service is initiated from a dedicated `docker-compose` file
