@@ -25,6 +25,7 @@ class Product(db_u.Model):
     id: int = db_u.Column(db_u.Integer, primary_key=True, autoincrement=False)
     title: str = db_u.Column(db_u.String(200))
     image: str = db_u.Column(db_u.String(200))
+    likes: int = db_u.Column(db_u.Integer, autoincrement=False)
 
 
 @dataclass
@@ -44,10 +45,12 @@ def index():
 @app.route('/api/products/<int:id>/like', methods=['GET', 'POST'])
 def like(id):
     req = requests.get('http://172.17.0.1:8000/api/user')
-    json = req.json()
+    data = req.json()
 
     try:
-        product_user = ProductUser(user_id=json['id'], product_id=id)
+        product_user = ProductUser(user_id=data['id'], product_id=id)
+        product = Product.query.filter_by(id=id).first()
+        product.likes += 1
         db_u.session.add(product_user)
         db_u.session.commit()
 
