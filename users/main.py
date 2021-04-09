@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db_u/main'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
 
-CORS()
+CORS(app)
 
 db_u = SQLAlchemy(app)
 
