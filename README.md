@@ -1,11 +1,16 @@
 # Microservices backend
 
-### It provides two microservices accessible via two independent REST APIs.
+#### It provides two microservices accessible via two independent REST APIs.
 * Admin operations: port `8000`
 * User operations: port `8001`
 
+#### Tech stack
+* The `admin` API is based on `django`
+* The `users` API is based on `flask`
+* Message distribution provided by `RabbitMQ`
 
-### RabbitMQ
+
+#### RabbitMQ
 ```bash
 # Pull and run the instance - note that we are mapping the management port (8080) so that the web interface is available right away
 $ docker run -d --rm --net rabbits -p 8080:15672 --hostname rabbit-1 --name rabbit-1 rabbitmq:3.8-management
