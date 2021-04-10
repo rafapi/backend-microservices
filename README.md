@@ -44,7 +44,7 @@ $ python manage.py migrate
 ```
 ```bash
 # Flask
-* Create a migrations module (see [manager.py](https://github.com/rafapi/backend-microservices/blob/main/users/manager.py)
+* Create a migrations module (see */users/manager.py*)
 * Create the db models - make sure flask-sqlalchemy is installed
 # Initialise and run migrations
 $ python manager.py db_u init
