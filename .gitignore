@@ -130,6 +130,7 @@ dmypy.json
 
 # MySQL data
 .dbdata/
+users/migrations/*
 
 # RabbitMQ
 rabbitmq/*
