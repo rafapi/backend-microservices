@@ -34,3 +34,20 @@ $ docker exec -it rabbit-1 bash
   # Enable the management_pluggin
   $ rabbitmq-plugins enable rabbitmq_management
 ```
+#### Django and Flask migrations
+```bash
+# Django
+* Create the django application 
+* Crea the db models module
+$ python manage.py makemigrations
+$ python manage.py migrate
+```
+```bash
+# Flask
+* Create a migrations module (see */users/manager.py*)
+* Create the db models - make sure flask-sqlalchemy is installed
+# Initialise and run migrations
+$ python manager.py db_u init
+$ python manager.py db_u migrate
+$ python manager.py db_u upgrade
+```
