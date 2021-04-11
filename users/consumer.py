@@ -5,7 +5,7 @@ import pika
 
 from functools import partial
 
-from main import Product, db_u
+from models import Product, db_u
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
