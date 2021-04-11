@@ -6,7 +6,7 @@
 
 #### Tech stack
 * `django` for the `admin` API
-* `flask` for the `users` API
+* `fastapi`/`flask` for the user-facing API
 * `RabbitMQ` for message distribution
 * Each of the previous services runs on a `docker` container
 
