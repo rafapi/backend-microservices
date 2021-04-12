@@ -1,6 +1,0 @@
-fastapi>=0.63.0
-SQLAlchemy>=1.4
-typer>=0.3.2
-asyncpg>=0.22.0
-uvicorn>=0.13.4
-requests==2.25.0
