@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 
-echo "Waiting for MySQL..."
+echo "Waiting for PostgreSQL..."
 
-while ! nc -z db_u 3306; do
+while ! nc -z fast-db 5432; do
   sleep 0.1
 done
 
-echo "MySQL started"
+echo "PostgreSQL started"
 
 exec "$@"

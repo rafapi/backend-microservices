@@ -1,64 +1,64 @@
-import requests
+import asyncio
+# import requests
+import typer
 
-from dataclasses import dataclass
+from typing import List
 
-from flask import Flask, jsonify, abort
-from werkzeug.exceptions import HTTPException
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from sqlalchemy import UniqueConstraint
+from fastapi import FastAPI, Path, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel
+from sqlalchemy.exc import IntegrityError
 
-from producer import publish
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db_u/main'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['DEBUG'] = True
-
-CORS(app)
-
-db_u = SQLAlchemy(app)
+from src.db.base import init_models
+from src.db.base import get_session
+from src import crud
 
 
-@dataclass
-class Product(db_u.Model):
-    id: int = db_u.Column(db_u.Integer, primary_key=True, autoincrement=False)
-    title: str = db_u.Column(db_u.String(200))
-    image: str = db_u.Column(db_u.String(200))
-    likes: int = db_u.Column(db_u.Integer, autoincrement=False, default=0)
+app = FastAPI()
+cli = typer.Typer()
 
 
-@dataclass
-class ProductUser(db_u.Model):
-    id = db_u.Column(db_u.Integer, primary_key=True)
-    user_id = db_u.Column(db_u.Integer)
-    product_id = db_u.Column(db_u.Integer)
-
-    UniqueConstraint('user_id', 'product_id', name='user_product_unique')
+class ProductSchema(BaseModel):
+    id: int
+    title: str
+    image: str
+    likes: int
 
 
-@app.route('/api/products')
-def index():
-    return jsonify(Product.query.all())
+@cli.command()
+def db_init_models():
+    asyncio.run(init_models())
+    print("Done")
 
 
-@app.route('/api/products/<int:id>/like', methods=['GET', 'POST'])
-def like(id):
-    req = requests.get('http://172.17.0.1:8000/api/user')
-    data = req.json()
+@app.get("/api/products")
+async def get_products(session: AsyncSession = Depends(get_session)) -> List[ProductSchema]:
+    return await crud.get_all(session)
 
+
+@app.post("/api/products/{id}/like")
+async def like(id: int = Path(..., gt=0), session: AsyncSession = Depends(get_session)):
+    # req = requests.get('http://localhost:8000/api/user')
+    # data = req.json()
+
+    product = await crud.like(session, id)
+    print(f"QUERY: {product}")
     try:
-        product_user = ProductUser(user_id=data['id'], product_id=id)
-        product = Product.query.filter_by(id=id).first()
-        product.likes += 1
-        db_u.session.add(product_user)
-        db_u.session.commit()
+        await session.commit()
+        return {"product": id, "message": "success"}
+    except IntegrityError as ex:
+        await session.rollback()
+        raise Exception(f"You already liked this product: {ex}")
 
-        publish('product_liked', id)
 
-    except HTTPException:
-        abort(400, 'You already liked this product.')
+@app.post("/api/products/")
+async def create_product(product: ProductSchema, session: AsyncSession = Depends(get_session)):
+    await crud.create_product(session, product.id, product.title, product.image)
 
-    return jsonify({
-        'message': 'success'
-        })
+    response_obj = {"title": product.title, "image": product.image}
+
+    return response_obj
+
+
+if __name__ == "__main__":
+    cli()

@@ -5,7 +5,10 @@ import pika
 
 from functools import partial
 
-from main import Product, db_u
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from users.src import crud
+from users.db.base import get_session
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
@@ -20,29 +23,24 @@ def ack_message(ch, delivery_tag):
         LOGGER.debug('Channel already closed!')
 
 
-def process_data(connection, ch, properties, delivery_tag, body):
+async def process_data(connection, ch, properties, delivery_tag, body):
     LOGGER.debug('Received in main')
 
     data = json.loads(body)
     LOGGER.debug(data)
 
+    session: AsyncSession = get_session()
+
     if properties.content_type == 'product_created':
-        product = Product(id=data['id'], title=data['title'], image=data['image'])
-        db_u.session.add(product)
-        db_u.session.commit()
+        await crud.create_product(session, data['id'], data['title'], data['image'])
         LOGGER.debug('Product Created')
 
     elif properties.content_type == 'product_updated':
-        product = Product.query.get(data['id'])
-        product.title = data['title']
-        product.image = data['image']
-        db_u.session.commit()
+        await crud.update_product(session, data['title'], data['image'])
         LOGGER.debug('Product Updated')
 
     elif properties.content_type == 'product_deleted':
-        product = Product.query.get(data)
-        db_u.session.delete(product)
-        db_u.session.commit()
+        await crud.delete_product(session, data['id'])
         LOGGER.debug('Product Deleted')
 
     cb = partial(ack_message, ch, delivery_tag)
