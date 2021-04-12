@@ -1,9 +1,0 @@
-[submodule "frontend/src/configfiles/nvim/pack/bundle/opt/vim-javascript"]
-	path = frontend/src/configfiles/nvim/pack/bundle/opt/vim-javascript
-	url = https://github.com/pangloss/vim-javascript.git
-[submodule "frontend/src/configfiles/nvim/pack/bundle/opt/vim-jsx-pretty"]
-	path = frontend/src/configfiles/nvim/pack/bundle/opt/vim-jsx-pretty
-	url = https://github.com/maxmellon/vim-jsx-pretty.git
-[submodule "frontend/src/configfiles/nvim/pack/bundle/opt/vim-graphql"]
-	path = frontend/src/configfiles/nvim/pack/bundle/opt/vim-graphql
-	url = https://github.com/jparise/vim-graphql.git
