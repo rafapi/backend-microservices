@@ -51,13 +51,13 @@ async def like(id: int = Path(..., gt=0), session: AsyncSession = Depends(get_se
         raise Exception(f"You already liked this product: {ex}")
 
 
-@app.post("/api/products/")
-async def create_product(product: ProductSchema, session: AsyncSession = Depends(get_session)):
-    await crud.create_product(session, product.id, product.title, product.image)
+# @app.post("/api/products/")
+# async def create_product(product: ProductSchema, session: AsyncSession = Depends(get_session)):
+#     await crud.create_product(session, product.id, product.title, product.image)
 
-    response_obj = {"title": product.title, "image": product.image}
+#     response_obj = {"title": product.title, "image": product.image}
 
-    return response_obj
+#     return response_obj
 
 
 if __name__ == "__main__":

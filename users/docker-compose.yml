@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: app_f
-    command: python -u broker/consumer.py
+    command: python -u consumer_pika_async.py
     depends_on:
       - fast-db
     networks:

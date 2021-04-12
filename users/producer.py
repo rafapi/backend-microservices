@@ -6,7 +6,7 @@ from pika.exceptions import StreamLostError
 
 
 credentials = pika.PlainCredentials('guest', 'guest')
-params = pika.ConnectionParameters(host='10.0.0.132', port=5672, virtual_host='products',
+params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='products',
                                    credentials=credentials)
 
 
