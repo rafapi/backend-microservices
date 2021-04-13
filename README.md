@@ -8,7 +8,7 @@
 *  User-facing API
    * `FastAPI`
    * `PostgreSQL`
-   * S`QLAlchemy 1.4.7` Async
+   * `SQLAlchemy 1.4.7` Async
    * `aio-pika` for async communication with RabbitMQ
 *  Admin API
     * `Django`
