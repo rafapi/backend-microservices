@@ -1,30 +1,29 @@
 from typing import List, Optional
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import Product
 
 
-async def get_all(session: AsyncSession) -> List[Product]:
+async def get_all_products(session: AsyncSession) -> List[Product]:
     products = await session.execute(select(Product))
     return products.scalars().all()
 
 
-async def like(session: AsyncSession, id: int):
+async def get_product(session: AsyncSession, id: int):
     product = await session.execute(select(Product).where(Product.id == id))
-    session.add(product)
-    await session.flush()
+    return product.scalar()
 
 
 async def create_product(session: AsyncSession, id: int, title: str, image: str):
-    product = Product(id=id, title=title, image=image)
-    session.add(product)
-    await session.commit()
+    product = insert(Product).values(id=id, title=title, image=image)
+    await session.execute(product)
 
 
-async def update_product(session: AsyncSession, title: Optional[str], image: Optional[str]):
-    product = update(Product).where(Product.id == id).values(title=title, image=image)
+async def update_product(session: AsyncSession, id: int, title: Optional[str],
+                         image: Optional[str], likes: Optional[int]):
+    product = update(Product).where(Product.id == id).values(title=title, image=image, likes=likes)
     product.execution_options(synchronize_session="fetch")
     await session.execute(product)
 
