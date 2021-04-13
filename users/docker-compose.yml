@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     command: uvicorn main:app --host 0.0.0.0 --reload
     ports:
-      - 8006:8000
+      - 8001:8000
     volumes:
       - .:/app
     depends_on:
@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: app_f
-    command: python -u consumer_pika_async.py
+    command: python -u consumer.py
     depends_on:
       - fast-db
     networks:
