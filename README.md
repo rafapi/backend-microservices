@@ -7,7 +7,7 @@
 #### Tech stack
 *  User-facing API
    * `fastapi`
-   * PostgreSQL
+   * `PostgreSQL`
    * S`QLAlchemy 1.4.7` Async
    * `aio-pika` for async communication with RabbitMQ
 *  Admin API
