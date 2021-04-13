@@ -1,33 +1,36 @@
+import asyncio
+import logging
 import json
 
-import pika
+from aio_pika import connect_robust, Message, ExchangeType
 
-from pika.exceptions import StreamLostError
-
-
-credentials = pika.PlainCredentials('guest', 'guest')
-params = pika.ConnectionParameters(host='rabbitmq', port=5672, virtual_host='products',
-                                   credentials=credentials)
+# from pika.exceptions import StreamLostError
 
 
-def get_ch():
-    connection = pika.BlockingConnection(params)
-    channel = connection.channel()
-    channel.queue_declare(queue='admin', auto_delete=True)
-
-    return connection, channel
+LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
+              '-35s %(lineno) -5d: %(message)s')
+LOGGER = logging.getLogger(__name__)
 
 
-conn, ch = get_ch()
+async def publish(content_type, body):
+    connection = await connect_robust(
+        "amqp://guest:guest@rabbitmq:5672/products"
+    )
 
+    channel = await connection.channel()
 
-def publish(method, body):
-    global conn, ch
-    properties = pika.BasicProperties(method)
+    exchange = await channel.declare_exchange(
+        "products", ExchangeType.DIRECT, durable=True
+    )
 
-    try:
-        ch.basic_publish(exchange='products', routing_key='admin',
-                         body=json.dumps(body), properties=properties)
+    message_body = bytes(json.dumps(body), 'utf-8')
 
-    except StreamLostError:
-        conn, ch = get_ch()
+    message = Message(body=message_body,
+                      content_type=content_type
+                      )
+
+    await exchange.publish(message, routing_key='admin')
+
+    print(" [x] Sent %r" % message.body)
+
+    await connection.close()
