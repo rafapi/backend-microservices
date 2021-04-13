@@ -1,4 +1,4 @@
-import requests
+# import requests
 
 from typing import List
 
@@ -41,7 +41,7 @@ async def like(id: int = Path(..., gt=0), session: AsyncSession = Depends(get_se
     try:
         await session.commit()
         # Send info to admin service
-        publish('product_liked', id)
+        await publish('product_liked', id)
         return {"product": pr.title, "likes": pr.likes}
     except IntegrityError as ex:
         await session.rollback()
