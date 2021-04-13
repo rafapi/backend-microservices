@@ -5,8 +5,8 @@
 * User operations: port `8001`
 
 #### Tech stack
+* `fastapi` for the user-facing API
 * `django` for the `admin` API
-* `fastapi`/`flask` for the user-facing API
 * `RabbitMQ` for message distribution
 * Each of the previous services runs on a `docker` container
 
@@ -43,7 +43,7 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 ```bash
-# Flask
+# FastAPI/Flask
 * Create a migrations module (see */users/manager.py*)
 * Create the db models - make sure flask-sqlalchemy is installed
 # Initialise and run migrations
