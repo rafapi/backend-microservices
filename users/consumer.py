@@ -41,7 +41,6 @@ async def process_message(message: IncomingMessage):
 
 async def process_data(message: IncomingMessage):
     LOGGER.debug('Received in main')
-    print('Received in main')
 
     session: AsyncSession = await get_session()
 
@@ -52,23 +51,19 @@ async def process_data(message: IncomingMessage):
         if message.content_type == 'product_created':
             await crud.create_product(session, id=data['id'], title=data['title'], image=data['image'])
             LOGGER.debug('Product Created (async)')
-            print('Product Created (async)')
 
         elif message.content_type == 'product_updated':
             await crud.update_product(session, id=data['id'], title=data['title'],
                                       image=data['image'], likes=data['likes'])
             LOGGER.debug('Product Updated')
-            print('Product Updated')
 
         elif message.content_type == 'product_deleted':
-            print(data)
             await crud.delete_product(session, id=int(data))
             LOGGER.debug('Product Deleted')
-            print('Product Deleted')
 
 
 async def main(loop):
-    print('Receiving messages in main')
+    LOGGER.debug('Receiving messages in main')
     connection = await connect_robust(
         "amqp://guest:guest@rabbitmq:5672/products", loop=loop
     )
@@ -96,7 +91,7 @@ loop = asyncio.get_event_loop()
 loop.create_task(main(loop))
 
 try:
-    print(" [*] Waiting for messages. To exit press CTRL+C")
+    LOGGER.debug(" [*] Waiting for messages...")
     loop.run_forever()
 except KeyboardInterrupt:
-    print("Interrupted by user")
+    LOGGER.debug("Interrupted by user")
