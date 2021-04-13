@@ -34,13 +34,12 @@ async def like(id: int = Path(..., gt=0), session: AsyncSession = Depends(get_se
 
     product = await crud.get_product(session, id)
     pr = ProductSchema(id=product.id, title=product.title, image=product.image, likes=product.likes)
-    print(f'PRODUCT: {pr.likes}')
     liked = pr.likes + 1
-    print(f'PRODUCT_AFTER: {pr.likes}')
     await crud.update_product(session, pr.id, pr.title, pr.image, likes=liked)
+
     try:
         await session.commit()
-        return {"product": id, "message": "liked"}
+        return {"product": pr.title, "likes": pr.likes}
     except IntegrityError as ex:
         await session.rollback()
         raise Exception(f"You already liked this product: {ex}")
