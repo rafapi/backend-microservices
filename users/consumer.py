@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from aio_pika import connect_robust, ExchangeType, IncomingMessage
 
 from src.models import Product
+from src import crud
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
@@ -26,7 +27,8 @@ async_session = sessionmaker(
 
 async def get_session() -> AsyncSession:
     async with async_session() as session:
-        yield session
+        async with session.begin():
+            return session
 
 
 async def process_message(message: IncomingMessage):
@@ -41,7 +43,7 @@ async def process_data(message: IncomingMessage):
     LOGGER.debug('Received in main')
     print('Received in main')
 
-    session: AsyncSession = get_session()
+    session: AsyncSession = await get_session()
     print(session)
 
     async with message.process():
@@ -51,22 +53,17 @@ async def process_data(message: IncomingMessage):
         LOGGER.debug(data)
 
         if message.content_type == 'product_created':
-            product = Product(id=data['id'], title=data['title'], image=data['image'])
-            session.add(product)
-            await session.commit()
+            await crud.create_product(session, id=data['id'], title=data['title'], image=data['image'])
             LOGGER.debug('Product Created')
             print('Product Created')
 
         elif message.content_type == 'product_updated':
-            product = update(Product).where(Product.id == data['id']).values(title=data['title'], image=data['image'])
-            product.execution_options(synchronize_session="fetch")
-            await session.execute(product)
+            await crud.update_product(session, title=data['title'], image=data['image'])
             LOGGER.debug('Product Updated')
             print('Product Updated')
 
         elif message.content_type == 'product_deleted':
-            product = delete(Product).where(Product.id == data['id'])
-            await session.execute(product)
+            await crud.update_product(session, id=data['id'])
             LOGGER.debug('Product Deleted')
             print('Product Deleted')
 
