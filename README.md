@@ -6,12 +6,12 @@
 
 #### Tech stack
 *  User-facing API
-   * `fastapi`
+   * `FastAPI`
    * `PostgreSQL`
    * S`QLAlchemy 1.4.7` Async
    * `aio-pika` for async communication with RabbitMQ
 *  Admin API
-    * `django`
+    * `Django`
     * `MySQL`
     * `SQLAlchemy 1.3`
     * `pika`
