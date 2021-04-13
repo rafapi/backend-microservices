@@ -5,8 +5,16 @@
 * User operations: port `8001`
 
 #### Tech stack
-* `fastapi` for the user-facing API
-* `django` for the `admin` API
+*  User-facing API
+  * `fastapi`
+  * PostgreSQL
+  * S`QLAlchemy 1.4.7` Async
+  * `aio-pika` for async communication with RabbitMQ
+*  Admin API
+  * `django`
+  * `MySQL`
+  * `SQLAlchemy 1.3`
+  * `pika`
 * `RabbitMQ` for message distribution
 * Each of the previous services runs on a `docker` container
 
