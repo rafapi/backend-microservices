@@ -66,22 +66,17 @@ async def main(loop):
         "amqp://guest:guest@rabbitmq:5672/products", loop=loop
     )
 
-    # Creating channel
     channel = await connection.channel()
 
-    # Maximum message count which will be
-    # processing at the same time.
     await channel.set_qos(prefetch_count=1)
 
     exchange = await channel.declare_exchange(
         "products", ExchangeType.DIRECT, durable=True
     )
 
-    # Declaring queue
     queue = await channel.declare_queue('main', auto_delete=True)
 
     await queue.bind(exchange)
-
     await queue.consume(process_data)
 
 
