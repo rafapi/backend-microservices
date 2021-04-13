@@ -1,14 +1,16 @@
 version: '3.8'
 services:
   backend:
-    image: app_f
-    command: gunicorn -w 2 -b 0.0.0.0:5000 main:app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --reload
     ports:
-      - 8001:5000
+      - 8001:8000
     volumes:
       - .:/app
     depends_on:
-      - db_u
+      - fast-db
     networks:
       - rabbits
 
@@ -19,22 +21,21 @@ services:
     image: app_f
     command: python -u consumer.py
     depends_on:
-      - db_u
+      - fast-db
     networks:
       - rabbits
 
-  db_u:
-    image: mysql:5.7.22
-    restart: always
+  fast-db:
+    build:
+      context: ./pg_db
+      dockerfile: Dockerfile
     environment:
-      MYSQL_DATABASE: main
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     volumes:
-      - .dbdata:/var/lib/mysql
+      - .dbdata:/var/lib/postgresql
     ports:
-      - 33067:3306
+      - 35432:5432
     networks:
       - rabbits
 

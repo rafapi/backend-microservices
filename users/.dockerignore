@@ -3,4 +3,7 @@
 # Include project directories and source files
 !*.py
 !*.sh
+!broker/*.py
+!src/*.py
+!src/db/*.py
 !requirements.txt
