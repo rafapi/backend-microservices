@@ -2,13 +2,11 @@ import logging
 import json
 import asyncio
 
-from sqlalchemy import update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from aio_pika import connect_robust, ExchangeType, IncomingMessage
 
-from src.models import Product
 from src import crud
 
 
