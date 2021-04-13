@@ -44,26 +44,25 @@ async def process_data(message: IncomingMessage):
     print('Received in main')
 
     session: AsyncSession = await get_session()
-    print(session)
 
     async with message.process():
         data = json.loads(message.body)
-        print(data['title'])
-        print(data['image'])
         LOGGER.debug(data)
 
         if message.content_type == 'product_created':
             await crud.create_product(session, id=data['id'], title=data['title'], image=data['image'])
-            LOGGER.debug('Product Created')
-            print('Product Created')
+            LOGGER.debug('Product Created (async)')
+            print('Product Created (async)')
 
         elif message.content_type == 'product_updated':
-            await crud.update_product(session, title=data['title'], image=data['image'])
+            await crud.update_product(session, id=data['id'], title=data['title'],
+                                      image=data['image'], likes=data['likes'])
             LOGGER.debug('Product Updated')
             print('Product Updated')
 
         elif message.content_type == 'product_deleted':
-            await crud.update_product(session, id=data['id'])
+            print(data)
+            await crud.delete_product(session, id=int(data))
             LOGGER.debug('Product Deleted')
             print('Product Deleted')
 
