@@ -7,6 +7,8 @@
 #### It provides two microservices accessible via two independent REST APIs.
 * Admin operations: port `8000`
 * User operations: port `8001`
+* Independent arquitecture
+* Independent deployment
 
 #### Tech stack
 *  User-facing API
