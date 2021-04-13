@@ -1,4 +1,3 @@
-import asyncio
 import json
 import functools
 import logging
@@ -182,7 +181,7 @@ class Consumer(object):
 
         if properties.content_type == 'product_created':
             # product = Product(id=data['id'], title=data['title'], image=data['image'])
-            product = insert(Product).values(id=3, title='ti 4', image='im 4')
+            product = insert(Product).values(id=data['id'], title=data['title'], image=data['image'])
             db.execute(product)
             db.commit()
             LOGGER.debug('Product Created')

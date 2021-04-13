@@ -8,6 +8,7 @@ from src.models import Product
 
 
 DATABASE_URL = "postgresql+psycopg2://root:root@localhost:35432/main"
+
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
