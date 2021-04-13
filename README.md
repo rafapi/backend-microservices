@@ -11,10 +11,10 @@
    * S`QLAlchemy 1.4.7` Async
    * `aio-pika` for async communication with RabbitMQ
 *  Admin API
-  * `django`
-  * `MySQL`
-  * `SQLAlchemy 1.3`
-  * `pika`
+    * `django`
+    * `MySQL`
+    * `SQLAlchemy 1.3`
+    * `pika`
 * `RabbitMQ` for message distribution
 * Each of the previous services runs on a `docker` container
 
