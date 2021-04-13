@@ -19,6 +19,7 @@ async def get_product(session: AsyncSession, id: int):
 async def create_product(session: AsyncSession, id: int, title: str, image: str):
     product = insert(Product).values(id=id, title=title, image=image)
     await session.execute(product)
+    await session.commit()
 
 
 async def update_product(session: AsyncSession, id: int, title: Optional[str],
@@ -26,8 +27,10 @@ async def update_product(session: AsyncSession, id: int, title: Optional[str],
     product = update(Product).where(Product.id == id).values(title=title, image=image, likes=likes)
     product.execution_options(synchronize_session="fetch")
     await session.execute(product)
+    await session.commit()
 
 
 async def delete_product(session: AsyncSession, id: int):
-    product = delete((Product).where(Product.id == id))
+    product = delete(Product).where(Product.id == id)
     await session.execute(product)
+    await session.commit()
