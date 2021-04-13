@@ -29,8 +29,10 @@ def ack_message(ch, delivery_tag):
 
 def process_data(connection, ch, delivery_tag, body):
     LOGGER.debug('Received in admin')
+    print('Received in admin')
     id = json.loads(body)
     LOGGER.debug(id)
+    print(id)
     product = Product.objects.get(id=id)
     product.likes += 1
     product.save()
