@@ -1,4 +1,3 @@
-import json
 import asyncio
 from aio_pika import connect_robust, Message, ExchangeType
 
@@ -17,9 +16,9 @@ async def main(loop):
         )
 
     # Sending the message
-    message_body = b'{"title": "ti 1", "image": "im 1"}'
+    message_body = b'4'
     message = Message(message_body)
-    await exchange.publish(message, routing_key="main")
+    await exchange.publish(message, routing_key="admin")
 
     print(" [x] Sent %r" % message)
 
