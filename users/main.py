@@ -18,7 +18,7 @@ origins = [
 def create_application() -> FastAPI:
     application = FastAPI()
     application.include_router(products.router,
-                               prefix="/products", tags=["products"])
+                               prefix="/api/products", tags=["products"])
     application.add_middleware(
             CORSMiddleware,
             allow_origins=origins,
