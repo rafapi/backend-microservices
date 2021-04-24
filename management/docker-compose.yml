@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: app_d
-    command: python -u consumer.py
+    command: python consumer.py
     depends_on:
       - db
     networks:
