@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: app_f
-    command: python -u consumer.py
+    command: python consumer.py
     depends_on:
       - fast-db
     networks:
