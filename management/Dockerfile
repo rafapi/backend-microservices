@@ -5,6 +5,7 @@ RUN apt-get update \
   && apt-get clean
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
 WORKDIR /app
 
