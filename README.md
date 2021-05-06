@@ -50,14 +50,14 @@ $ docker exec -it rabbit-1 bash
 ```
 #### Django and Flask migrations
 ```bash
-# Django
+# Django (admiin site)
 * Create the django application 
 * Crea the db models module
 $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 ```bash
-# FastAPI/Flask
+# FastAPI/Flask (client site)
 * Create a migrations module (see */users/manager.py*)
 * Create the db models - make sure flask-sqlalchemy is installed
 # Initialise and run migrations
