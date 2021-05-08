@@ -5,7 +5,7 @@ from aio_pika import connect_robust, Message, ExchangeType
 async def main(loop):
     # Perform connection
     connection = await connect_robust(
-        "amqp://guest:guest@10.0.0.132:5672/products", loop=loop
+        "amqp://guest:guest@rabbitmq:5672/products", loop=loop
     )
 
     # Creating a channel
