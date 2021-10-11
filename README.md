@@ -28,7 +28,7 @@
 * Each service is initiated from a dedicated `docker-compose` file
 
 ### Frontend
-https://github.com/rafapi/frontend-microservices
+Based on TypeScript: https://github.com/rafapi/frontend-microservices
 
 ### Notes
 #### Run RabbitMQ base image and enable plugins on demand
