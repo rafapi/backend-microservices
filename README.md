@@ -22,7 +22,7 @@
     * `SQLAlchemy 1.3`
     * `pika`
 * `RabbitMQ` for message distribution
-* `Docker` for instance isolation 
+* `Docker` for instance isolation and separation of concerns
 
 ### Setup
 * Each service is initiated from a dedicated `docker-compose` file
